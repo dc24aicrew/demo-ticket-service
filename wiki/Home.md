@@ -15,6 +15,8 @@ This application addresses the critical need for real-time ticket management at 
 - [Usage](Usage) - How to use the application's features
 - [API Reference](API-Reference) - API documentation
 - [FAQ](FAQ) - Frequently asked questions
+- [Contributing to the Wiki](CONTRIBUTING) - How to contribute to this documentation
+- [Wiki Maintenance](MAINTENANCE) - How to keep the Wiki up-to-date
 
 ## Key Features
 
@@ -27,3 +29,4 @@ This application addresses the critical need for real-time ticket management at 
 - [GitHub Repository](https://github.com/dc24aicrew/demo-ticket-service)
 - [Contributing Guidelines](https://github.com/dc24aicrew/demo-ticket-service/blob/main/CONTRIBUTING.md)
 - [Code of Conduct](https://github.com/dc24aicrew/demo-ticket-service/blob/main/CODE_OF_CONDUCT.md)
+- [Wiki Images Documentation](images/README) - How to add and use images in the Wiki
