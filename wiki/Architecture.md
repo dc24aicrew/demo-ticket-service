@@ -84,7 +84,26 @@ Contains adapters to external systems and configurations:
 
 ## Component Interactions
 
-![Component Interactions](images/component_interactions.svg)
+```mermaid
+flowchart TD
+    RESTController["REST Controller\n(API Layer)"] --> ServicePort["Service Port\n(Domain Layer)"]
+    ServicePort --> ServiceImpl["Service Impl\n(Use Case Layer)"]
+    ServiceImpl --> RepositoryPort["Repository Port\n(Domain Layer)"]
+    RepositoryPort --> RepositoryAdapter["Repository Adapter\n(Infra Layer)"]
+    RepositoryAdapter --> JPARepository["JPA Repository\n(Infra Layer)"]
+    
+    classDef apiLayer fill:#f9d9d9,stroke:#d24545,stroke-width:2px
+    classDef domainLayer fill:#d9f9d9,stroke:#45d245,stroke-width:2px
+    classDef useCaseLayer fill:#d9d9f9,stroke:#4545d2,stroke-width:2px
+    classDef infrastructureLayer fill:#f9f9d9,stroke:#d2d245,stroke-width:2px
+    
+    class RESTController apiLayer
+    class ServicePort domainLayer
+    class ServiceImpl useCaseLayer
+    class RepositoryPort domainLayer
+    class RepositoryAdapter infrastructureLayer
+    class JPARepository infrastructureLayer
+```
 
 The diagram above illustrates how components interact across layers in the Clean Architecture pattern.
 
