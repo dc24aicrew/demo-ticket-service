@@ -82,6 +82,12 @@ Contains adapters to external systems and configurations:
 - **Security Configuration**: Authentication and authorization setup
 - **Persistence Configuration**: Database configuration
 
+## Component Interactions
+
+![Component Interactions](https://raw.githubusercontent.com/wiki/dc24aicrew/demo-ticket-service/images/component_interactions.svg)
+
+The diagram above illustrates how components interact across layers in the Clean Architecture pattern.
+
 ## Dependency Flow
 
 One of the key principles of Clean Architecture is the dependency rule: dependencies always point inward. In our implementation:

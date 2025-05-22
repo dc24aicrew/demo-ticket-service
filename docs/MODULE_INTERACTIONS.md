@@ -14,18 +14,15 @@ Dependencies point inward, with the domain layer being the most independent.
 
 ## Component Interactions Diagram
 
-```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  REST Controller│─────▶│  Service Port   │─────▶│  Service Impl   │
-│  (API Layer)    │     │  (Domain Layer) │     │  (Use Case Layer)│
-└─────────────────┘     └─────────────────┘     └────────┬────────┘
-                                                        │
-                                                        ▼
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  JPA Repository │◀─────│ Repository Adapt│◀─────│Repository Port  │
-│  (Infra Layer)  │     │  (Infra Layer)  │     │  (Domain Layer) │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-```
+![Component Interactions](https://raw.githubusercontent.com/wiki/dc24aicrew/demo-ticket-service/images/component_interactions.svg)
+
+The diagram above shows the clean architecture flow between components:
+
+1. REST Controller (API Layer) calls Service Port (Domain Layer)
+2. Service Port is implemented by Service Impl (Use Case Layer)
+3. Service Impl calls Repository Port (Domain Layer)
+4. Repository Port is implemented by Repository Adapter (Infrastructure Layer)
+5. Repository Adapter uses JPA Repository (Infrastructure Layer)
 
 ## Key Interactions
 
