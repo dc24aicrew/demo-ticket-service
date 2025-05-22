@@ -62,6 +62,63 @@ This document provides a detailed reference for the Event Ticket Management Syst
 - **Parameters**: `id` - Event UUID
 - **Response**: Array of ticket objects or 404 if event not found
 
+## Staff API
+
+### Get All Staff Members
+
+- **Endpoint**: `GET /api/staffs`
+- **Description**: Lists all staff members
+- **Auth Required**: Yes
+- **Response**: Array of staff objects
+
+### Get Staff Member by ID
+
+- **Endpoint**: `GET /api/staffs/{id}`
+- **Description**: Retrieves a staff member by their UUID
+- **Auth Required**: Yes
+- **Parameters**: `id` - Staff UUID
+- **Response**: Staff details or 404 if not found
+
+### Create Staff Member
+
+- **Endpoint**: `POST /api/staffs`
+- **Description**: Creates a new staff member
+- **Auth Required**: Yes
+- **Request Body**: Staff details (name, role, email, etc.)
+- **Response**: Created staff object with 201 status code
+
+### Update Staff Member
+
+- **Endpoint**: `PUT /api/staffs/{id}`
+- **Description**: Updates an existing staff member
+- **Auth Required**: Yes
+- **Parameters**: `id` - Staff UUID
+- **Request Body**: Updated staff details
+- **Response**: Updated staff object or 404 if not found
+
+### Delete Staff Member
+
+- **Endpoint**: `DELETE /api/staffs/{id}`
+- **Description**: Deletes a staff member
+- **Auth Required**: Yes
+- **Parameters**: `id` - Staff UUID
+- **Response**: 204 No Content or 404 if not found
+
+### Get Staff by Department
+
+- **Endpoint**: `GET /api/staffs/department/{department}`
+- **Description**: Lists staff members in a specific department
+- **Auth Required**: Yes
+- **Parameters**: `department` - Department name
+- **Response**: Array of staff objects
+
+### Get Active Staff
+
+- **Endpoint**: `GET /api/staffs/active`
+- **Description**: Lists all active staff members
+- **Auth Required**: Yes
+- **Response**: Array of active staff objects
+
 ## Data Models
 
 ### Ticket
@@ -90,6 +147,20 @@ This document provides a detailed reference for the Event Ticket Management Syst
   "date": "DateTime",
   "venue": "String",
   "ticketCount": "Integer"
+}
+```
+
+### Staff
+
+```
+{
+  "id": "UUID",
+  "name": "String",
+  "role": "String",
+  "email": "String",
+  "phone": "String",
+  "department": "String",
+  "active": "Boolean"
 }
 ```
 
