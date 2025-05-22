@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
@@ -22,7 +22,7 @@ public class Ticket extends BaseEntity {
     private UUID eventId;
     private String attendeeName;
     private TicketStatus status;
-    private LocalDateTime purchaseDate;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private OffsetDateTime purchaseDate;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
 }

@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * Event domain entity representing events that have tickets
@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
 @SuperBuilder
 public class Event extends BaseEntity {
     private String name;
-    private LocalDateTime date;
+    private OffsetDateTime date;
     private String venue;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
 }
