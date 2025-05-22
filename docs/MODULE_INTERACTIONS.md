@@ -14,7 +14,7 @@ Dependencies point inward, with the domain layer being the most independent.
 
 ## Component Interactions Diagram
 
-![Component Interactions](https://raw.githubusercontent.com/wiki/dc24aicrew/demo-ticket-service/images/component_interactions.svg)
+![Component Interactions](../wiki/images/component_interactions.svg)
 
 The diagram above shows the clean architecture flow between components:
 

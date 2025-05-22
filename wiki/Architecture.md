@@ -4,7 +4,7 @@ The Event Ticket Management System implements Clean Architecture principles to c
 
 ## Clean Architecture Overview
 
-![Clean Architecture Diagram](https://raw.githubusercontent.com/wiki/dc24aicrew/demo-ticket-service/images/clean_architecture.png)
+![Clean Architecture Diagram](images/clean_architecture.png)
 
 The application is structured in layers, with dependencies pointing inward:
 
@@ -84,7 +84,7 @@ Contains adapters to external systems and configurations:
 
 ## Component Interactions
 
-![Component Interactions](https://raw.githubusercontent.com/wiki/dc24aicrew/demo-ticket-service/images/component_interactions.svg)
+![Component Interactions](images/component_interactions.svg)
 
 The diagram above illustrates how components interact across layers in the Clean Architecture pattern.
 
