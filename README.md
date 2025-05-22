@@ -137,8 +137,10 @@ The frontend will be developed using:
 
 ## License
 
-[Add your license information here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
 
-[Add contact information here]
+Demo Ticket Service Team - demo-ticket-service@example.com
+
+GitHub: [https://github.com/dc24aicrew/demo-ticket-service](https://github.com/dc24aicrew/demo-ticket-service)
