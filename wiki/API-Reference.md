@@ -8,15 +8,44 @@ This document provides a detailed reference for the Event Ticket Management Syst
 
 - **Endpoint**: `POST /api/auth/login`
 - **Description**: Authenticates a user and returns a JWT token
-- **Request Body**: Username and password
-- **Response**: JWT token and user details
+- **Request Body**:
+  ```json
+  {
+    "username": "string",
+    "password": "string"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "token": "JWT-token-string",
+    "username": "authenticated-username",
+    "roles": "comma-separated-roles"
+  }
+  ```
+- **HTTP Status Codes**:
+  - 200 OK: Authentication successful
+  - 401 UNAUTHORIZED: Invalid credentials
+  - 500 INTERNAL SERVER ERROR: Server error
 
 ### Logout
 
 - **Endpoint**: `POST /api/auth/logout`
 - **Description**: Invalidates the current token
-- **Auth Required**: Yes
-- **Response**: Confirmation message
+- **Auth Required**: Yes (JWT token in Authorization header)
+- **Request Header**:
+  ```
+  Authorization: ******  ```
+- **Response**:
+  ```json
+  {
+    "message": "Logged out successfully"
+  }
+  ```
+- **HTTP Status Codes**:
+  - 200 OK: Logout successful
+  - 401 UNAUTHORIZED: No valid token provided
+  - 403 FORBIDDEN: Invalid token
 
 ## Ticket API
 

@@ -1,8 +1,9 @@
 -- User Data
+-- Passwords: admin123 and user123 (BCrypt encoded)
 INSERT INTO users (id, username, password, roles, created_at, updated_at) 
 VALUES 
-    ('3a2c1e4b-5d8f-42a1-9b7c-8e5d3f2a1c4b', 'admin', '$2a$10$r1UVuiiE.HPgGYkHjn1keuPmI4/ZtA61N6f.g9jPs0hLuVXQZCaOm', 'ADMIN', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    ('4b2d1c5a-6e1f-47b2-8c3d-9a4e5f6b7c8d', 'user', '$2a$10$8HVvAOgegQhmKon/0TCRxuYvgdkDD6m9YQOHAa9prkXNDCoqMGMES', 'USER', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+    ('3a2c1e4b-5d8f-42a1-9b7c-8e5d3f2a1c4b', 'admin', '$2a$10$XlS5.8wVzLhb6hNShoZW7.viWvwLpe7nD7H7XlCWkc6D9TD/T3vfG', 'ADMIN', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    ('4b2d1c5a-6e1f-47b2-8c3d-9a4e5f6b7c8d', 'user', '$2a$10$oN0JK7RU7eUB3KYmnn8eau59xMPDFt3.YfHrmccQXSdjHVkjJrJnG', 'USER', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
 -- Event Data
 INSERT INTO events (id, name, date, venue, created_at, updated_at)
