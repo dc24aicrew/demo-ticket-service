@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     new AntPathRequestMatcher("/health/**"),
                     new AntPathRequestMatcher("/h2-console/**"),
-                    new AntPathRequestMatcher("/api/health/**"),
+                    new AntPathRequestMatcher("/health/**"),
                     new AntPathRequestMatcher("/auth/login")
                 ).permitAll()
                 .anyRequest().authenticated()
