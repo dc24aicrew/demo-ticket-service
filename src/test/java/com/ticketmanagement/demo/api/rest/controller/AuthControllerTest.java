@@ -1,22 +1,22 @@
  package com.ticketmanagement.demo.api.rest.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ticketmanagement.demo.api.rest.dto.AuthRequest;
-import com.ticketmanagement.demo.core.domain.entity.User;
-import com.ticketmanagement.demo.core.port.api.UserServicePort;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ticketmanagement.demo.api.rest.dto.AuthRequest;
+import com.ticketmanagement.demo.core.domain.entity.User;
+import com.ticketmanagement.demo.core.port.api.UserServicePort;
 
 @SpringBootTest
 @AutoConfigureMockMvc

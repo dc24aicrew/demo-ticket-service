@@ -65,17 +65,11 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(
-                    new AntPathRequestMatcher("/api/auth/**"),
-                    new AntPathRequestMatcher("/auth/**"),  // Keep for backward compatibility
-                    new AntPathRequestMatcher("/api/health/**"),
-                    new AntPathRequestMatcher("/health/**"),
-                    new AntPathRequestMatcher("/h2-console/**"),
-                    new AntPathRequestMatcher("/api/auth/login")
+                    new AntPathRequestMatcher("/events/**"),
+                    new AntPathRequestMatcher("/tickets/**"),
+                    new AntPathRequestMatcher("/auth/**"),
+                    new AntPathRequestMatcher("/health/**")
                 ).permitAll()
-                .requestMatchers(
-                    new AntPathRequestMatcher("/api/events/**")
-                ).authenticated()
-                .anyRequest().authenticated()
             )
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}));
             

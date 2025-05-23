@@ -36,4 +36,9 @@ public class EventService implements EventServicePort {
     public List<Ticket> getTicketsByEventId(UUID eventId) {
         return eventRepositoryPort.findTicketsByEventId(eventId);
     }
+    
+    @Override
+    public Event save(Event event) {
+        return eventRepositoryPort.save(event);
+    }
 }

@@ -31,4 +31,11 @@ public interface EventServicePort {
      * @return List of tickets for the event
      */
     List<Ticket> getTicketsByEventId(UUID eventId);
+    
+    /**
+     * Save an event
+     * @param event Event to save
+     * @return Saved event
+     */
+    Event save(Event event);
 }
