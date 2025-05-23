@@ -1,0 +1,119 @@
+name: Ticket Service Backend CI/CD
+
+on:
+  push:
+    branches: ["main", "develop"]
+    paths:
+      - "src/**"
+      - "pom.xml"
+      - ".github/workflows/backend-ci.yml"
+  pull_request:
+    branches: ["main", "develop"]
+    paths:
+      - "src/**"
+      - "pom.xml"
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn -B clean package --file pom.xml
+
+      - name: Run tests
+        run: mvn test
+
+      - name: Analyze code with SonarQube
+        if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+        run: mvn sonar:sonar -Dsonar.projectKey=ticket-service -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        continue-on-error: true
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ticket-service-jar
+          path: target/*.jar
+          retention-days: 5
+
+  security-scan:
+    name: Security Scan
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: maven
+
+      - name: Run OWASP dependency check
+        run: mvn org.owasp:dependency-check-maven:check
+        continue-on-error: true
+
+  deploy-dev:
+    name: Deploy to Development
+    needs: [build, security-scan]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    environment: development
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ticket-service-jar
+
+      - name: Deploy to Dev Server
+        run: echo "Deploying to development server. Add actual deployment steps here."
+        # Replace with actual deployment commands
+        # Example:
+        # - name: Deploy to dev server
+        #   uses: appleboy/ssh-action@master
+        #   with:
+        #     host: ${{ secrets.DEV_SERVER_HOST }}
+        #     username: ${{ secrets.DEV_SERVER_USER }}
+        #     key: ${{ secrets.DEV_SERVER_KEY }}
+        #     script: |
+        #       mkdir -p ~/app
+        #       cp ~/deploy/*.jar ~/app/
+        #       cd ~/app
+        #       java -jar app.jar &
+
+  deploy-prod:
+    name: Deploy to Production
+    needs: [build, security-scan]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ticket-service-jar
+
+      - name: Deploy to Production Server
+        run: echo "Deploying to production server. Add actual deployment steps here."
+        # Replace with actual production deployment steps
+        # This would typically involve more strict approval processes
