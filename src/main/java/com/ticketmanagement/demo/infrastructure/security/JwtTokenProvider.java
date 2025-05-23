@@ -2,7 +2,6 @@ package com.ticketmanagement.demo.infrastructure.security;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -47,7 +46,9 @@ public class JwtTokenProvider {
     
     @PostConstruct
     public void init() {
-        key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKey));
+        // Use the raw string key instead of trying to decode it
+        // Base64 encoding will be applied internally by the Keys.hmacShaKeyFor method
+        key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
     
     /**

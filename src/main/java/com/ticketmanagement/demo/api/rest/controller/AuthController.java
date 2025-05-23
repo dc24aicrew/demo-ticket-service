@@ -46,7 +46,19 @@ public class AuthController {
             // Check if user exists
             Optional<UserJpaEntity> userOpt = userRepository.findByUsername(authRequest.getUsername());
             
-            if (userOpt.isEmpty() || !passwordEncoder.matches(authRequest.getPassword(), userOpt.get().getPassword())) {
+            if (userOpt.isEmpty()) {
+                throw new BadCredentialsException("Invalid username or password");
+            }
+            
+            String storedPassword = userOpt.get().getPassword();
+            
+            // Enhanced debug logging for password verification
+            boolean matches = passwordEncoder.matches(authRequest.getPassword(), storedPassword);
+            System.out.println("Stored password in DB: " + storedPassword);
+            System.out.println("Input password: " + authRequest.getPassword());
+            System.out.println("Password matches: " + matches);
+            
+            if (!passwordEncoder.matches(authRequest.getPassword(), storedPassword)) {
                 throw new BadCredentialsException("Invalid username or password");
             }
             

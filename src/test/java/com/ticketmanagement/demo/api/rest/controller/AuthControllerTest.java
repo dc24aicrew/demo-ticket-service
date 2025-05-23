@@ -1,4 +1,4 @@
-package com.ticketmanagement.demo.api.rest.controller;
+ package com.ticketmanagement.demo.api.rest.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticketmanagement.demo.api.rest.dto.AuthRequest;
