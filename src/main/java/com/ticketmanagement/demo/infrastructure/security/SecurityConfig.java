@@ -8,6 +8,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
@@ -17,6 +18,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -32,11 +39,14 @@ public class SecurityConfig {
                 .requestMatchers(
                     new AntPathRequestMatcher("/health/**"),
                     new AntPathRequestMatcher("/h2-console/**"),
-                    new AntPathRequestMatcher("/api/health/**")
+                    new AntPathRequestMatcher("/health/**"),
+                    new AntPathRequestMatcher("/auth/login")
                 ).permitAll()
                 .anyRequest().authenticated()
-            );
-          // For H2 Console - updated to use new API
+            )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            
+        // For H2 Console - updated to use new API
         http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
         return http.build();
     }
