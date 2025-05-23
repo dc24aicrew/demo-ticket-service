@@ -40,8 +40,9 @@ The backend is built using a clean architecture approach with the following laye
 - PUT /api/tickets/{id}/status
 
 #### Event API
-- GET /api/events
-- GET /api/events/{id}/tickets
+- GET /api/events - Get a list of all events (JWT authenticated)
+- GET /api/events/{id} - Get a specific event by ID (JWT authenticated)
+- GET /api/events/{id}/tickets - Get all tickets for a specific event (JWT authenticated)
 
 ## Development Setup
 
