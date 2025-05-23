@@ -10,13 +10,13 @@ INSERT INTO events (id, name, date, venue, created_at, updated_at)
 VALUES
     ('5c3e2a1b-7d4f-48a2-9c5e-1a3b7d4f6a8c', 'Summer Music Festival', '2023-07-15 14:00:00Z', 'Central Park', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     ('6d4e3b2a-8e5f-49b3-1d6e-2b4a6c8e0d2a', 'Tech Conference 2023', '2023-09-25 09:00:00Z', 'Convention Center', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    ('7e5f4c3b-9f6g-50c4-2e7f-3c5b7d9f1e3b', 'Comedy Night', '2023-06-10 19:30:00Z', 'Laugh Factory', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+    ('7e5f4c3b-9f6f-50c4-2e7f-3c5b7d9f1e3b', 'Comedy Night', '2023-06-10 19:30:00Z', 'Laugh Factory', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
 -- Ticket Data
 INSERT INTO tickets (id, code, event_id, attendee_name, status, purchase_date, created_at, updated_at)
 VALUES
-    ('8f6g5d4e-1h7i-51d5-3f8g-4d6c8e0f2g4c', 'SMF-001', '5c3e2a1b-7d4f-48a2-9c5e-1a3b7d4f6a8c', 'John Smith', 'ACTIVE', '2023-05-20 10:15:00Z', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    ('9g7h6e5f-2i8j-52e6-4g9h-5e7d9f1g3h5d', 'SMF-002', '5c3e2a1b-7d4f-48a2-9c5e-1a3b7d4f6a8c', 'Jane Doe', 'ACTIVE', '2023-05-21 14:30:00Z', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    ('1h8i7f6g-3j9k-53f7-5h1i-6f8e0g2h4i6e', 'TC-001', '6d4e3b2a-8e5f-49b3-1d6e-2b4a6c8e0d2a', 'Robert Johnson', 'ACTIVE', '2023-08-15 09:45:00Z', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    ('2i9j8g7h-4k1l-54g8-6i2j-7g9f1h3i5j7f', 'TC-002', '6d4e3b2a-8e5f-49b3-1d6e-2b4a6c8e0d2a', 'Sarah Williams', 'USED', '2023-08-16 11:20:00Z', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    ('3j1k9h8i-5l2m-55h9-7j3k-8h1g2i4j6k8g', 'CN-001', '7e5f4c3b-9f6g-50c4-2e7f-3c5b7d9f1e3b', 'Michael Brown', 'ACTIVE', '2023-06-01 15:10:00Z', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+    ('8f6f5d4e-1a7b-51d5-3f8a-4d6c8e0f2a4c', 'SMF-001', '5c3e2a1b-7d4f-48a2-9c5e-1a3b7d4f6a8c', 'John Smith', 'ACTIVE', '2023-05-20 10:15:00Z', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    ('9f7a6e5f-2b8c-52e6-4a9b-5e7d9f1a3b5d', 'SMF-002', '5c3e2a1b-7d4f-48a2-9c5e-1a3b7d4f6a8c', 'Jane Doe', 'ACTIVE', '2023-05-21 14:30:00Z', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    ('1a8b7f6a-3c9d-53f7-5a1b-6f8e0a2b4c6e', 'TC-001', '6d4e3b2a-8e5f-49b3-1d6e-2b4a6c8e0d2a', 'Robert Johnson', 'ACTIVE', '2023-08-15 09:45:00Z', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    ('2b9c8a7b-4d1e-54a8-6b2c-7a9f1b3c5d7f', 'TC-002', '6d4e3b2a-8e5f-49b3-1d6e-2b4a6c8e0d2a', 'Sarah Williams', 'USED', '2023-08-16 11:20:00Z', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    ('3c1d9a8b-5e2f-55a9-7c3d-8a1b2c4d6e8a', 'CN-001', '7e5f4c3b-9f6f-50c4-2e7f-3c5b7d9f1e3b', 'Michael Brown', 'ACTIVE', '2023-06-01 15:10:00Z', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
