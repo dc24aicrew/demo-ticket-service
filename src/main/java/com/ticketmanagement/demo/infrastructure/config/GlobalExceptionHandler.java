@@ -1,6 +1,9 @@
 package com.ticketmanagement.demo.infrastructure.config;
 
-import com.ticketmanagement.demo.core.domain.exception.DomainExceptions;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -10,10 +13,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.ticketmanagement.demo.core.domain.exception.DomainExceptions;
+import com.ticketmanagement.demo.core.domain.exception.TicketNotFoundException;
+
 import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Global exception handler for centralized API error responses
@@ -33,6 +36,16 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(DomainExceptions.EntityNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleDomainEntityNotFound(DomainExceptions.EntityNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(TicketNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleTicketNotFound(TicketNotFoundException ex) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 ex.getMessage(),
