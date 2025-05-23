@@ -45,6 +45,51 @@ The backend is built using a clean architecture approach with the following laye
 - GET /api/events/{id} - Get a specific event by ID (JWT authenticated)
 - GET /api/events/{id}/tickets - Get all tickets for a specific event (JWT authenticated)
 
+## API Usage Guide
+
+### Authentication
+
+All endpoints except login require JWT authentication with a token in the Authorization header.
+
+```bash
+# Login to get a JWT token
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "admin123"}'
+
+# Use token in subsequent requests (replace JWT-TOKEN with actual token)
+curl -X GET http://localhost:8080/api/tickets \
+  -H "Authorization: JWT-TOKEN"
+```
+
+### Example API Calls
+
+#### Working with Tickets
+
+```bash
+# Search for a ticket by code
+curl -X GET "http://localhost:8080/api/tickets/search?code=SMF-001" \
+  -H "Authorization: JWT-TOKEN"
+
+# Update a ticket status
+curl -X PUT "http://localhost:8080/api/tickets/8f6f5d4e-1a7b-51d5-3f8a-4d6c8e0f2a4c/status" \
+  -H "Authorization: JWT-TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"status": "USED"}'
+```
+
+#### Working with Events
+
+```bash
+# Get all events
+curl -X GET "http://localhost:8080/api/events" \
+  -H "Authorization: JWT-TOKEN"
+
+# Get tickets for an event
+curl -X GET "http://localhost:8080/api/events/5c3e2a1b-7d4f-48a2-9c5e-1a3b7d4f6a8c/tickets" \
+  -H "Authorization: JWT-TOKEN"
+```
+
 ## Demo Credentials
 
 For testing purposes, the following demo credentials are provided:
@@ -72,8 +117,8 @@ Please note that these are for demonstration purposes only and should be changed
 ### Building and Running the Application
 
 1. Clone the repository:
-   ```
-   git clone <repository-url>
+   ```bash
+   git clone https://github.com/dc24aicrew/demo-ticket-service.git
    cd demo-ticket-service
    ```
 
@@ -93,11 +138,29 @@ Please note that these are for demonstration purposes only and should be changed
    ```
 
 4. Access the application:
-   - Main application: [http://localhost:8080](http://localhost:8080)
-   - H2 Console: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+   - API Base URL: [http://localhost:8080/api](http://localhost:8080/api)
+   - H2 Console: [http://localhost:8080/api/h2-console](http://localhost:8080/api/h2-console)
      - JDBC URL: `jdbc:h2:mem:demodb`
      - Username: `sa`
      - Password: `password`
+
+### Demo Data
+
+The application automatically loads sample data on startup:
+
+- **Users**: 
+  - admin/admin123 (ADMIN role)
+  - user/user123 (USER role)
+
+- **Events**:
+  - Summer Music Festival (2 tickets)
+  - Tech Conference 2023 (2 tickets)
+  - Comedy Night (1 ticket)
+
+- **Tickets**:
+  - SMF-001, SMF-002 (for Summer Music Festival)
+  - TC-001, TC-002 (for Tech Conference)
+  - CN-001 (for Comedy Night)
 
 ## Project Structure
 
