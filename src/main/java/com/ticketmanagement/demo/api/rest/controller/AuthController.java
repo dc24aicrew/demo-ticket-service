@@ -1,12 +1,9 @@
 package com.ticketmanagement.demo.api.rest.controller;
 
-import com.ticketmanagement.demo.api.rest.dto.AuthRequest;
-import com.ticketmanagement.demo.api.rest.dto.AuthResponse;
-import com.ticketmanagement.demo.infrastructure.persistence.entity.UserJpaEntity;
-import com.ticketmanagement.demo.infrastructure.persistence.repository.UserJpaRepository;
-import com.ticketmanagement.demo.infrastructure.security.JwtUtils;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,9 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import com.ticketmanagement.demo.api.rest.dto.AuthRequest;
+import com.ticketmanagement.demo.api.rest.dto.AuthResponse;
+import com.ticketmanagement.demo.infrastructure.persistence.entity.UserJpaEntity;
+import com.ticketmanagement.demo.infrastructure.persistence.repository.UserJpaRepository;
+import com.ticketmanagement.demo.infrastructure.security.JwtTokenProvider;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Controller for handling authentication requests
@@ -30,7 +32,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthController {
     
-    private final JwtUtils jwtUtils;
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
     private final UserJpaRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -44,13 +46,25 @@ public class AuthController {
             // Check if user exists
             Optional<UserJpaEntity> userOpt = userRepository.findByUsername(authRequest.getUsername());
             
-            if (userOpt.isEmpty() || !passwordEncoder.matches(authRequest.getPassword(), userOpt.get().getPassword())) {
+            if (userOpt.isEmpty()) {
+                throw new BadCredentialsException("Invalid username or password");
+            }
+            
+            String storedPassword = userOpt.get().getPassword();
+            
+            // Enhanced debug logging for password verification
+            boolean matches = passwordEncoder.matches(authRequest.getPassword(), storedPassword);
+            System.out.println("Stored password in DB: " + storedPassword);
+            System.out.println("Input password: " + authRequest.getPassword());
+            System.out.println("Password matches: " + matches);
+            
+            if (!passwordEncoder.matches(authRequest.getPassword(), storedPassword)) {
                 throw new BadCredentialsException("Invalid username or password");
             }
             
             // User authenticated, generate token
             final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
-            final String token = jwtUtils.generateToken(userDetails);
+            final String token = jwtTokenProvider.createToken(userDetails);
             
             // Return token and user details
             return ResponseEntity.ok(new AuthResponse(
