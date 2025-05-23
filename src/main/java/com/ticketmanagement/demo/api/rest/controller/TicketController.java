@@ -88,6 +88,8 @@ public class TicketController extends BaseController<Ticket, TicketDto> {
             return ResponseEntity.ok(ticketMapper.toDto(updatedTicket));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(409).build();
         }
     }
 }
