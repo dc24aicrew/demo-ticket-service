@@ -1,18 +1,16 @@
 package com.ticketmanagement.demo.security;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@SpringBootTest
 public class PasswordEncoderTest {
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Test
     void generateEncodedPasswords() {
+        // Create an instance of PasswordEncoder directly
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        
         // Generate encoded passwords for data.sql
         String rawAdminPassword = "admin123";
         String rawUserPassword = "user123";

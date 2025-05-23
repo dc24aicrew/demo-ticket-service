@@ -16,11 +16,11 @@ Dependencies point inward, with the domain layer being the most independent.
 
 ```mermaid
 flowchart TD
-    RESTController["REST Controller\n(API Layer)"] --> ServicePort["Service Port\n(Domain Layer)"]
-    ServicePort --> ServiceImpl["Service Impl\n(Use Case Layer)"]
-    ServiceImpl --> RepositoryPort["Repository Port\n(Domain Layer)"]
-    RepositoryPort --> RepositoryAdapter["Repository Adapter\n(Infra Layer)"]
-    RepositoryAdapter --> JPARepository["JPA Repository\n(Infra Layer)"]
+    RESTController["REST Controller<br/>(API Layer)"] --> ServicePort["Service Port<br/>(Domain Layer)"]
+    ServicePort --> ServiceImpl["Service Impl<br/>(Use Case Layer)"]
+    ServiceImpl --> RepositoryPort["Repository Port<br/>(Domain Layer)"]
+    RepositoryPort --> RepositoryAdapter["Repository Adapter<br/>(Infra Layer)"]
+    RepositoryAdapter --> JPARepository["JPA Repository<br/>(Infra Layer)"]
     
     classDef apiLayer fill:#f9d9d9,stroke:#d24545,stroke-width:2px
     classDef domainLayer fill:#d9f9d9,stroke:#45d245,stroke-width:2px
