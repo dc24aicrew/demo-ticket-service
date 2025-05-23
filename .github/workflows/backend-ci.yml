@@ -1,119 +1,232 @@
-name: Ticket Service Backend CI/CD
+# .github/workflows/ci.yml
+name: Spring Boot CI/CD
 
 on:
   push:
-    branches: ["main", "develop"]
-    paths:
-      - "src/**"
-      - "pom.xml"
-      - ".github/workflows/backend-ci.yml"
+    branches: [main, develop]
   pull_request:
-    branches: ["main", "develop"]
-    paths:
-      - "src/**"
-      - "pom.xml"
+    branches: [main]
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+env:
+  JAVA_VERSION: "21"
+  MAVEN_OPTS: "-Xmx1024m"
 
 jobs:
-  build:
-    name: Build and Test
+  test:
+    name: Tests
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          java-version: "17"
           distribution: "temurin"
-          cache: maven
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: "maven"
 
-      - name: Build with Maven
-        run: mvn -B clean package --file pom.xml
+      - name: Verify Java version
+        run: |
+          java -version
+          mvn -version
 
-      - name: Run tests
-        run: mvn test
+      - name: Run unit tests
+        run: mvn clean test
 
-      - name: Analyze code with SonarQube
-        if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
-        run: mvn sonar:sonar -Dsonar.projectKey=ticket-service -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      - name: Generate test report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Maven Tests
+          path: target/surefire-reports/*.xml
+          reporter: java-junit
+          fail-on-error: true
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: |
+            target/surefire-reports/
+            target/site/jacoco/
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Sonar needs full history
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: "maven"
+
+      - name: Run tests with coverage
+        run: mvn clean verify jacoco:report
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         continue-on-error: true
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: [test, code-quality]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          name: ticket-service-jar
-          path: target/*.jar
-          retention-days: 5
+          distribution: "temurin"
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: "maven"
+
+      - name: Build application
+        run: mvn clean package -DskipTests
+
+      - name: Build info
+        run: |
+          echo "Application built successfully"
+          ls -la target/
+          java -jar target/*.jar --version || echo "Version check skipped"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: jar-artifacts
+          path: |
+            target/*.jar
+            target/classes/
+          retention-days: 30
 
   security-scan:
     name: Security Scan
-    needs: build
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'
+    needs: test
 
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          java-version: "17"
           distribution: "temurin"
-          cache: maven
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: "maven"
 
-      - name: Run OWASP dependency check
-        run: mvn org.owasp:dependency-check-maven:check
+      - name: Run OWASP Dependency Check
+        run: |
+          mvn org.owasp:dependency-check-maven:check \
+            -DskipProvidedScope=true \
+            -DfailBuildOnCVSS=7
         continue-on-error: true
 
-  deploy-dev:
-    name: Deploy to Development
-    needs: [build, security-scan]
+      - name: Upload security scan results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-scan-results
+          path: target/dependency-check-report.html
+
+  docker-build:
+    name: Build Docker Image
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
-    environment: development
+    needs: build
+    if: github.ref == 'refs/heads/main'
 
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
         with:
-          name: ticket-service-jar
+          name: jar-artifacts
+          path: target/
 
-      - name: Deploy to Dev Server
-        run: echo "Deploying to development server. Add actual deployment steps here."
-        # Replace with actual deployment commands
-        # Example:
-        # - name: Deploy to dev server
-        #   uses: appleboy/ssh-action@master
-        #   with:
-        #     host: ${{ secrets.DEV_SERVER_HOST }}
-        #     username: ${{ secrets.DEV_SERVER_USER }}
-        #     key: ${{ secrets.DEV_SERVER_KEY }}
-        #     script: |
-        #       mkdir -p ~/app
-        #       cp ~/deploy/*.jar ~/app/
-        #       cd ~/app
-        #       java -jar app.jar &
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-  deploy-prod:
-    name: Deploy to Production
-    needs: [build, security-scan]
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest
+            ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy-staging:
+    name: Deploy to Staging
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [build, security-scan]
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+
+    steps:
+      - name: Deploy to staging
+        run: |
+          echo "Deploying to staging environment"
+          # Thêm logic deploy của bạn ở đây
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [docker-build]
+    if: github.ref == 'refs/heads/main'
     environment: production
 
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: ticket-service-jar
+      - name: Deploy to production
+        run: |
+          echo "Deploying to production environment"
+          # Thêm logic deploy của bạn ở đây
 
-      - name: Deploy to Production Server
-        run: echo "Deploying to production server. Add actual deployment steps here."
-        # Replace with actual production deployment steps
-        # This would typically involve more strict approval processes
+  notification:
+    name: Notifications
+    runs-on: ubuntu-latest
+    needs: [test, build, security-scan]
+    if: always()
+
+    steps:
+      - name: Notify on success
+        if: needs.test.result == 'success' && needs.build.result == 'success'
+        run: |
+          echo "✅ Build completed successfully!"
+
+      - name: Notify on failure
+        if: needs.test.result == 'failure' || needs.build.result == 'failure'
+        run: |
+          echo "❌ Build failed!"
+          exit 1
