@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
  * Example controller demonstrating how Lombok can be used with Spring DTOs
  */
 @RestController
-@RequestMapping("/api/example")
+@RequestMapping("/example")
 @Slf4j
 @Validated
 public class LombokExampleController {

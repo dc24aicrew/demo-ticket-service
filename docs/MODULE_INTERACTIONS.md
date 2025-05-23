@@ -61,7 +61,7 @@ Example:
 
 ```java
 @RestController
-@RequestMapping("/api/tickets")
+@RequestMapping("/tickets")
 public class TicketController {
     private final TicketServicePort ticketService;
     private final TicketMapper ticketMapper;

@@ -1,23 +1,31 @@
 package com.ticketmanagement.demo.api.rest.controller;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ticketmanagement.demo.api.rest.dto.TicketDto;
 import com.ticketmanagement.demo.api.rest.dto.TicketStatusUpdateDto;
 import com.ticketmanagement.demo.api.rest.mapper.TicketMapper;
 import com.ticketmanagement.demo.core.domain.entity.Ticket;
 import com.ticketmanagement.demo.core.domain.entity.TicketStatus;
 import com.ticketmanagement.demo.core.port.api.TicketServicePort;
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.UUID;
+import jakarta.validation.Valid;
 
 /**
  * REST controller for ticket operations
  */
 @RestController
-@RequestMapping("/api/tickets")
+@RequestMapping("/tickets")
 public class TicketController extends BaseController<Ticket, TicketDto> {
 
     private final TicketServicePort ticketService;

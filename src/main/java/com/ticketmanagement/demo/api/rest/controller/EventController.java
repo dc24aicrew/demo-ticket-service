@@ -1,26 +1,28 @@
 package com.ticketmanagement.demo.api.rest.controller;
 
-import com.ticketmanagement.demo.api.rest.dto.EventDto;
-import com.ticketmanagement.demo.api.rest.mapper.EventMapper;
-import com.ticketmanagement.demo.core.domain.entity.Event;
-import com.ticketmanagement.demo.core.domain.entity.Ticket;
-import com.ticketmanagement.demo.core.port.api.EventServicePort;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import com.ticketmanagement.demo.api.rest.dto.EventDto;
+import com.ticketmanagement.demo.api.rest.mapper.EventMapper;
+import com.ticketmanagement.demo.core.domain.entity.Event;
+import com.ticketmanagement.demo.core.domain.entity.Ticket;
+import com.ticketmanagement.demo.core.port.api.EventServicePort;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * REST controller for Event-related endpoints
  */
 @RestController
-@RequestMapping("/api/events")
+@RequestMapping("/events")
 @RequiredArgsConstructor
 public class EventController {
     
