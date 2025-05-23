@@ -8,7 +8,8 @@ This application addresses the critical need for real-time ticket management at 
 
 ## Key Features
 
-- **Simple Authentication System**: Basic login functionality with pre-configured demo accounts
+- **Authentication System**: JWT-based authentication with login/logout functionality
+- **Demo User Accounts**: Pre-configured user accounts for testing
 - **Ticket Search Functionality**: Quick search for tickets using unique ticket codes
 - **Ticket Status Management**: Update ticket status (Active/Used) with visual confirmation
 
@@ -43,6 +44,22 @@ The backend is built using a clean architecture approach with the following laye
 - GET /api/events - Get a list of all events (JWT authenticated)
 - GET /api/events/{id} - Get a specific event by ID (JWT authenticated)
 - GET /api/events/{id}/tickets - Get all tickets for a specific event (JWT authenticated)
+
+## Demo Credentials
+
+For testing purposes, the following demo credentials are provided:
+
+- **Admin User**: 
+  - Username: `admin`
+  - Password: `admin123`
+  - Roles: `ADMIN`
+
+- **Regular User**:
+  - Username: `user`
+  - Password: `user123`
+  - Roles: `USER`
+
+Please note that these are for demonstration purposes only and should be changed in a production environment.
 
 ## Development Setup
 
