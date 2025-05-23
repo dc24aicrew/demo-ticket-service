@@ -1,29 +1,29 @@
 package com.ticketmanagement.demo.api.rest.controller;
 
-import com.ticketmanagement.demo.api.rest.dto.EventDto;
-import com.ticketmanagement.demo.api.rest.mapper.EventMapper;
-import com.ticketmanagement.demo.core.domain.entity.Event;
-import com.ticketmanagement.demo.core.domain.entity.Ticket;
-import com.ticketmanagement.demo.core.domain.entity.TicketStatus;
-import com.ticketmanagement.demo.core.port.api.EventServicePort;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import com.ticketmanagement.demo.api.rest.dto.EventDto;
+import com.ticketmanagement.demo.api.rest.mapper.EventMapper;
+import com.ticketmanagement.demo.core.domain.entity.Event;
+import com.ticketmanagement.demo.core.domain.entity.Ticket;
+import com.ticketmanagement.demo.core.domain.entity.TicketStatus;
+import com.ticketmanagement.demo.core.port.api.EventServicePort;
 
 @ExtendWith(MockitoExtension.class)
 public class EventControllerTest {
