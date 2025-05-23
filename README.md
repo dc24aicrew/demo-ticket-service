@@ -15,13 +15,27 @@ This application addresses the critical need for real-time ticket management at 
 
 ## Technical Architecture
 
-### Backend (Spring Boot 3.2.0, Java 21)
+### Backend (Spring Boot 3.4.5, Java 21)
 
 The backend is built using a clean architecture approach with the following layers:
 
 - **Core Domain Layer**: Contains domain entities, business logic, and interfaces defining the boundaries between layers
+  - `com.ticketmanagement.demo.core.domain.entity`: Domain entities
+  - `com.ticketmanagement.demo.core.port.api`: Service interfaces (API ports)
+  - `com.ticketmanagement.demo.core.port.spi`: Repository interfaces (SPI ports)
+  - `com.ticketmanagement.demo.core.usecase`: Business logic implementations
+  
 - **Infrastructure Layer**: Implements technical capabilities like database access, security, and configuration
+  - `com.ticketmanagement.demo.infrastructure.persistence.adapter`: Repository implementations
+  - `com.ticketmanagement.demo.infrastructure.persistence.entity`: JPA entities
+  - `com.ticketmanagement.demo.infrastructure.persistence.repository`: Spring Data repositories
+  - `com.ticketmanagement.demo.infrastructure.security`: Security configurations
+  - `com.ticketmanagement.demo.infrastructure.config`: Application configurations
+  
 - **API Layer**: Exposes REST endpoints for frontend communication
+  - `com.ticketmanagement.demo.api.rest.controller`: REST controllers
+  - `com.ticketmanagement.demo.api.rest.dto`: Data Transfer Objects
+  - `com.ticketmanagement.demo.api.rest.mapper`: Entity to DTO mappers
 
 ### Data Models
 
@@ -55,6 +69,20 @@ For testing purposes, the following demo credentials are provided:
   - Roles: `USER`
 
 Please note that these are for demonstration purposes only and should be changed in a production environment.
+
+## Development with GitHub Copilot
+
+This project is optimized for development with GitHub Copilot. Several resources are provided to help Copilot generate accurate, architecture-compliant code:
+
+- **CONTRIBUTING.md**: Detailed contribution guidelines including clean architecture principles
+- **.github/copilot/CONTEXT.md**: Technical context with code patterns for Copilot
+- **.vscode/settings.json**: VS Code settings with hints for Copilot
+
+When using Copilot to generate code for this project, ensure the suggestions adhere to:
+1. Proper package placement according to clean architecture
+2. Dependency direction (dependencies always point inward)
+3. Established naming conventions and patterns
+4. Base class extension where appropriate
 
 ## Development Setup
 

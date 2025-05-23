@@ -1,82 +1,140 @@
-# Contributing to Event Ticket Management System
+# Contributing to Ticket Management System
 
-Thank you for considering contributing to the Event Ticket Management System. This document provides guidelines and instructions for contributing to this project.
+This document provides guidance for contributors to the Ticket Management System project, including architecture principles, code structure, and development guidelines.
 
-## Code of Conduct
+## Clean Architecture
 
-By participating in this project, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md). Please read it before contributing.
+This project strictly follows clean architecture principles to ensure separation of concerns, testability, and maintainability.
 
-## How Can I Contribute?
+### Architecture Layers
 
-### Reporting Bugs
+1. **API Layer** (`com.ticketmanagement.demo.api`)
 
-Before submitting a bug report, please check that it hasn't already been reported. If you find a similar issue, add any additional information as a comment.
+   - Handles HTTP requests, responses, and data transformation
+   - Contains controllers, DTOs (Data Transfer Objects), and mappers
+   - Depends on the Core layer but not on the Infrastructure layer
 
-When submitting a bug report, include:
+2. **Core Layer** (`com.ticketmanagement.demo.core`)
 
-- A clear and descriptive title
-- Steps to reproduce the issue
-- Expected behavior
-- Actual behavior
-- Screenshots (if applicable)
-- Your environment details (OS, Java version, etc.)
+   - Contains business logic and domain models
+   - Subpackages:
+     - `domain`: Domain entities and value objects
+     - `port`: Interface definitions (API and SPI ports)
+     - `usecase`: Service implementations of business logic
 
-### Suggesting Enhancements
+3. **Infrastructure Layer** (`com.ticketmanagement.demo.infrastructure`)
+   - Implements external dependencies and frameworks integration
+   - Subpackages:
+     - `persistence`: Database access implementations
+     - `security`: Authentication and authorization
+     - `config`: Configuration classes
 
-Enhancement suggestions are tracked as GitHub issues. When creating an enhancement suggestion, include:
+### Dependency Rule
 
-- A clear and descriptive title
-- Detailed explanation of the proposed functionality
-- Any relevant examples or mockups
-- Rationale for why this enhancement would be valuable
+The fundamental rule is that source code dependencies can only point inward:
 
-### Pull Requests
+- External layers can depend on inner layers
+- Inner layers cannot depend on outer layers
+- The Core layer has no dependencies on frameworks or external libraries
 
-1. Fork the repository
-2. Create a branch for your feature (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## Package Structure
 
-### Pull Request Guidelines
+```
+com.ticketmanagement.demo
+├── api
+│   └── rest
+│       ├── controller  // REST API endpoints
+│       ├── dto         // Data Transfer Objects
+│       └── mapper      // Conversion between DTOs and domain entities
+├── core
+│   ├── domain
+│   │   ├── entity      // Core business entities
+│   │   └── exception   // Domain-specific exceptions
+│   ├── port
+│   │   ├── api         // Service interfaces (API ports)
+│   │   └── spi         // Repository interfaces (SPI ports)
+│   └── usecase         // Service implementations
+└── infrastructure
+    ├── config          // Application configuration
+    ├── persistence
+    │   ├── adapter     // Repository implementations
+    │   ├── entity      // JPA entities
+    │   └── repository  // Spring Data repositories
+    └── security        // Security configurations
+```
 
-- Follow the code style of the project
-- Include tests for new features or bug fixes
-- Update documentation for significant changes
-- Keep pull requests focused on a single issue or feature
-- Link the PR to any related issues
+## Development Guidelines
 
-## Development Process
+### 1. Creating a New Feature
 
-### Setting Up Development Environment
+Follow this sequence:
 
-1. Clone the repository
-2. Install Java 21 and Maven 3.8+
-3. Run `./mvnw clean install` to build the project
+1. Define domain entities in `core.domain.entity`
+2. Define repository interfaces (ports) in `core.port.spi`
+3. Define service interfaces (ports) in `core.port.api`
+4. Implement services in `core.usecase`
+5. Create JPA entities in `infrastructure.persistence.entity`
+6. Implement repository adapters in `infrastructure.persistence.adapter`
+7. Define DTOs in `api.rest.dto`
+8. Implement mappers in `api.rest.mapper`
+9. Implement controllers in `api.rest.controller`
 
-### Coding Standards
+### 2. Naming Conventions
 
-- Follow Java coding conventions
+- **Entities**: Represent domain objects, named without suffixes (e.g., `Ticket`)
+- **DTOs**: Use the `Dto` suffix (e.g., `TicketDto`)
+- **Service Interfaces**: Use the `Port` suffix for ports (e.g., `TicketServicePort`)
+- **Service Implementations**: Use the `Service` suffix (e.g., `TicketService`)
+- **Repository Interfaces**: Use `Port` suffix (e.g., `TicketRepositoryPort`)
+- **Repository Implementations**: Use `Adapter` suffix (e.g., `TicketRepositoryAdapter`)
+- **JPA Entities**: Use `JpaEntity` suffix (e.g., `TicketJpaEntity`)
+
+### 3. Testing Guidelines
+
+- **Unit Tests**: Test each layer in isolation with mocks for dependencies
+- **Integration Tests**: Test interactions between layers
+- **End-to-End Tests**: Test complete flows through the system
+
+### 4. Code Style
+
 - Use meaningful variable and method names
-- Add Javadoc comments for public methods and classes
-- Follow the clean architecture principles established in the project
+- Write comprehensive Javadoc comments
+- Follow the SOLID principles
+- Keep methods short and focused on a single responsibility
+- Use constructor injection for dependencies
 
-### Testing
+## Example Implementation Flow
 
-- Write unit tests for all new features
-- Ensure all tests pass before submitting a PR
-- Aim for good test coverage of your code
+Here's an example of implementing a Ticket feature:
 
-## Git Workflow
+```java
+// 1. Domain Entity
+package com.ticketmanagement.demo.core.domain.entity;
 
-- Use feature branches for development
-- Keep commits focused and logical
-- Use conventional commit messages
-- Rebase your branch before submitting PRs
+public class Ticket extends BaseEntity {
+    private String title;
+    private String description;
+    private Priority priority;
+    private Status status;
+    // getters, setters, constructors
+}
 
-## Communication
+// 2. Repository Port
+package com.ticketmanagement.demo.core.port.spi;
 
-- Use GitHub issues for bug reports and feature discussions
-- For larger discussions, use GitHub Discussions
+public interface TicketRepositoryPort extends BaseRepositoryPort<Ticket> {
+    List<Ticket> findByStatus(Status status);
+}
 
-Thank you for contributing!
+// 3. Service Port
+package com.ticketmanagement.demo.core.port.api;
+
+public interface TicketServicePort extends BaseServicePort<Ticket> {
+    List<Ticket> findByStatus(Status status);
+    Ticket updateStatus(UUID id, Status newStatus);
+}
+
+// Continue with service implementation, JPA entities, repository adapter, DTOs, etc.
+```
+
+Remember to register any new components with Spring in appropriate configuration classes when needed.
