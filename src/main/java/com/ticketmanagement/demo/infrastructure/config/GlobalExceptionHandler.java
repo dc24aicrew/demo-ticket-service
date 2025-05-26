@@ -17,10 +17,12 @@ import com.ticketmanagement.demo.core.domain.exception.DomainExceptions;
 import com.ticketmanagement.demo.core.domain.exception.TicketNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Global exception handler for centralized API error responses
  */
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -131,6 +133,9 @@ public class GlobalExceptionHandler {
                 "An unexpected error occurred",
                 LocalDateTime.now()
         );
+        // Log the exception (optional, depending on your logging framework)
+        // e.g., logger.error("Unexpected error", ex);
+        log.error("Unexpected error", ex);
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

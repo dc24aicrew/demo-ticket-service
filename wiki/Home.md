@@ -13,7 +13,7 @@ This application addresses the critical need for real-time ticket management at 
 - [Getting Started](Getting-Started) - Setup instructions and quick start guide
 - [Architecture](Architecture) - Technical architecture and design patterns
 - [Usage](Usage) - How to use the application's features
-- [API Reference](API-Reference) - API documentation
+- [API Reference](API-Reference) - Comprehensive API documentation with examples
 - [FAQ](FAQ) - Frequently asked questions
 - [Contributing to the Wiki](CONTRIBUTING) - How to contribute to this documentation
 - [Wiki Maintenance](MAINTENANCE) - How to keep the Wiki up-to-date

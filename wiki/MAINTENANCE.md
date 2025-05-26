@@ -17,11 +17,13 @@ The documentation team and code contributors share responsibility for maintainin
 | Type of Change | Wiki Sections to Update |
 |----------------|------------------------|
 | New feature | Usage, API Reference (if applicable) |
-| API change | API Reference, possibly Usage |
+| API change | API Reference (single source of truth), possibly Usage |
 | Architecture change | Architecture |
 | Configuration change | Getting Started |
 | Common issue identified | FAQ |
 | Bug fix (user-visible) | Usage, possibly FAQ |
+
+**Note**: API documentation has been consolidated to avoid duplication. The README.md now contains only a brief API overview with references to the comprehensive [API Reference](API-Reference.md) in the wiki.
 
 ## Documentation Update Process
 
@@ -75,11 +77,15 @@ Before each release:
 
 ### API Reference
 
-Keep the API Reference in sync with the actual API:
+Keep the API Reference as the single source of truth for API documentation:
 
 1. Update endpoint documentation when endpoints are added, modified, or removed
 2. Update request/response examples to match current implementation
 3. Document breaking changes clearly with migration guidance
+4. Ensure README.md only contains a brief overview and references the detailed API Reference
+5. Update demo data examples when sample data changes
+6. Keep cURL examples current with actual endpoint behavior
+7. Verify all status codes and error responses are accurate
 
 ### Architecture
 
