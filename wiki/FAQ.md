@@ -30,7 +30,7 @@ Check the [CONTRIBUTING.md](https://github.com/dc24aicrew/demo-ticket-service/bl
 
 ### Where can I find API documentation?
 
-The [API Reference](API-Reference) page contains detailed information about all available endpoints.
+The comprehensive [API Reference](API-Reference) page contains detailed information about all available endpoints, including request/response schemas, examples, error codes, and demo data. The README.md provides a brief overview and quick links to the detailed documentation.
 
 ## Usage Questions
 

@@ -29,66 +29,16 @@ The backend is built using a clean architecture approach with the following laye
 - **Ticket**: Core ticket information including unique codes and status
 - **Event**: Event details that tickets are associated with
 
-### API Endpoints
+### API Overview
 
-#### Authentication API
-- **POST /api/auth/login** - Authenticate a user and receive a JWT token
-- **POST /api/auth/logout** - Invalidate the current JWT token
+The system provides REST APIs for authentication, ticket management, and event management. All endpoints except login require JWT authentication.
 
-#### Ticket API
-- **GET /api/tickets/search?code={ticketCode}** - Find a ticket by its unique code
-- **GET /api/tickets/{id}** - Get a specific ticket by UUID
-- **PUT /api/tickets/{id}/status** - Update a ticket's status (e.g., from ACTIVE to USED)
+**Key endpoints:**
+- Authentication: `/api/auth/login`, `/api/auth/logout`
+- Tickets: `/api/tickets/search`, `/api/tickets/{id}`, `/api/tickets/{id}/status`
+- Events: `/api/events`, `/api/events/{id}`, `/api/events/{id}/tickets`
 
-#### Event API
-- **GET /api/events** - Get a list of all events (JWT authenticated)
-- **GET /api/events/{id}** - Get a specific event by ID (JWT authenticated)
-- **GET /api/events/{id}/tickets** - Get all tickets for a specific event (JWT authenticated)
-
-## API Usage Guide
-
-### Authentication
-
-All endpoints except login require JWT authentication with a token in the Authorization header.
-
-```bash
-# Login to get a JWT token
-curl -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username": "admin", "password": "admin123"}'
-
-# Use token in subsequent requests (replace JWT-TOKEN with actual token)
-curl -X GET http://localhost:8080/api/tickets \
-  -H "Authorization: JWT-TOKEN"
-```
-
-### Example API Calls
-
-#### Working with Tickets
-
-```bash
-# Search for a ticket by code
-curl -X GET "http://localhost:8080/api/tickets/search?code=SMF-001" \
-  -H "Authorization: JWT-TOKEN"
-
-# Update a ticket status
-curl -X PUT "http://localhost:8080/api/tickets/8f6f5d4e-1a7b-51d5-3f8a-4d6c8e0f2a4c/status" \
-  -H "Authorization: JWT-TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"status": "USED"}'
-```
-
-#### Working with Events
-
-```bash
-# Get all events
-curl -X GET "http://localhost:8080/api/events" \
-  -H "Authorization: JWT-TOKEN"
-
-# Get tickets for an event
-curl -X GET "http://localhost:8080/api/events/5c3e2a1b-7d4f-48a2-9c5e-1a3b7d4f6a8c/tickets" \
-  -H "Authorization: JWT-TOKEN"
-```
+For detailed API documentation including request/response schemas, examples, and error codes, see the [API Reference](wiki/API-Reference.md).
 
 ## Demo Credentials
 
@@ -143,6 +93,37 @@ Please note that these are for demonstration purposes only and should be changed
      - JDBC URL: `jdbc:h2:mem:demodb`
      - Username: `sa`
      - Password: `password`
+
+### Docker Deployment
+
+#### Prerequisites
+- Docker
+- Docker Compose
+
+#### Running with Docker Compose
+
+1. Build and start the containers:
+   ```bash
+   docker-compose up -d
+   ```
+
+2. Access the applications:
+   - Frontend: [http://localhost:3000](http://localhost:3000)
+   - Backend API: [http://localhost:8080/api](http://localhost:8080/api)
+   - H2 Console: [http://localhost:8080/api/h2-console](http://localhost:8080/api/h2-console)
+     - JDBC URL: `jdbc:h2:mem:demodb`
+     - Username: `sa`
+     - Password: `password`
+
+3. Stop the containers:
+   ```bash
+   docker-compose down
+   ```
+
+4. Rebuild the containers (after making changes):
+   ```bash
+   docker-compose up -d --build
+   ```
 
 ### Demo Data
 
@@ -207,14 +188,17 @@ demo-ticket-service/
 - **JWT**: Token-based authentication
 - **Lombok**: Boilerplate code reduction
 - **Maven**: Build and dependency management
+- **Docker**: Containerization
+- **Docker Compose**: Container orchestration
 
-## Frontend (Planned)
+## Frontend
 
-The frontend will be developed using:
+The frontend is developed using:
 - React 18+ with TypeScript
 - Tailwind CSS for responsive UI
 - Axios for API communication
 - React Context for state management
+- Nginx for serving the application
 
 ## License
 

@@ -119,7 +119,7 @@ Located in `com.ticketmanagement.demo.api.rest`:
 
 ### Ticket Status Update Workflow
 
-1. User requests ticket status update via `PUT /api/tickets/{id}/status`
+1. User requests ticket status update via `PATCH /api/tickets/{id}/status`
 2. `TicketController` receives the request
 3. `TicketService` validates and processes the update
 4. `TicketRepositoryAdapter` persists the updated ticket

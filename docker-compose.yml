@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # Spring Boot Backend Service
+  ticket-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: demo-ticket-service
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - ticket-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  ticket-network:
+    driver: bridge
