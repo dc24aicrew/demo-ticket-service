@@ -144,6 +144,37 @@ Please note that these are for demonstration purposes only and should be changed
      - Username: `sa`
      - Password: `password`
 
+### Docker Deployment
+
+#### Prerequisites
+- Docker
+- Docker Compose
+
+#### Running with Docker Compose
+
+1. Build and start the containers:
+   ```bash
+   docker-compose up -d
+   ```
+
+2. Access the applications:
+   - Frontend: [http://localhost:3000](http://localhost:3000)
+   - Backend API: [http://localhost:8080/api](http://localhost:8080/api)
+   - H2 Console: [http://localhost:8080/api/h2-console](http://localhost:8080/api/h2-console)
+     - JDBC URL: `jdbc:h2:mem:demodb`
+     - Username: `sa`
+     - Password: `password`
+
+3. Stop the containers:
+   ```bash
+   docker-compose down
+   ```
+
+4. Rebuild the containers (after making changes):
+   ```bash
+   docker-compose up -d --build
+   ```
+
 ### Demo Data
 
 The application automatically loads sample data on startup:
@@ -207,14 +238,17 @@ demo-ticket-service/
 - **JWT**: Token-based authentication
 - **Lombok**: Boilerplate code reduction
 - **Maven**: Build and dependency management
+- **Docker**: Containerization
+- **Docker Compose**: Container orchestration
 
-## Frontend (Planned)
+## Frontend
 
-The frontend will be developed using:
+The frontend is developed using:
 - React 18+ with TypeScript
 - Tailwind CSS for responsive UI
 - Axios for API communication
 - React Context for state management
+- Nginx for serving the application
 
 ## License
 
