@@ -65,11 +65,10 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(
-                    new AntPathRequestMatcher("/events/**"),
-                    new AntPathRequestMatcher("/tickets/**"),
                     new AntPathRequestMatcher("/auth/**"),
                     new AntPathRequestMatcher("/health/**")
                 ).permitAll()
+                .anyRequest().authenticated()
             )
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}));
             
