@@ -26,13 +26,19 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Cache Maven dependencies
+      - name: Cache Maven repository
         uses: actions/cache@v4
         with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2-repo-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2-repo
 
+      - name: Cache Maven wrapper
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/wrapper
+          key: ${{ runner.os }}-m2-wrapper-${{ hashFiles('**/.mvn/wrapper/**') }}
+          restore-keys: ${{ runner.os }}-m2-wrapper
       - name: Make Maven wrapper executable
         run: chmod +x ./mvnw
 
