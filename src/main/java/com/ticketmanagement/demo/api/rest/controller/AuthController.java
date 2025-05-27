@@ -136,8 +136,8 @@ public class AuthController {
     }
     
     /**
-     * Helper method to get claims from token using reflection
-     * This is needed because getClaims is private in JwtTokenProvider
+     * Helper method to get claims from a JWT token
+     * This method uses the Jwts parser builder to parse the token and extract claims.
      *
      * @param token the JWT token
      * @return the token claims
