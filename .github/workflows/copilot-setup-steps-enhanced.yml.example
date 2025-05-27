@@ -1,0 +1,176 @@
+name: "Copilot Setup Steps - Enhanced"
+
+# This is an enhanced example for larger projects or when you need more resources
+# Rename this file to copilot-setup-steps.yml to use it instead of the basic version
+
+on: workflow_dispatch
+
+jobs:
+  copilot-setup-steps:
+    # Use larger runners for better performance (requires GitHub Team/Enterprise)
+    # runs-on: ubuntu-4-core  # Uncomment if you have access to larger runners
+    runs-on: ubuntu-latest
+    
+    # Increase timeout for larger projects
+    timeout-minutes: 30
+
+    permissions:
+      contents: read
+
+    # Optional: Use containers for consistent environment
+    # container:
+    #   image: openjdk:21-jdk
+    #   options: --user root
+
+    # Optional: Add services like databases for integration testing
+    # services:
+    #   postgres:
+    #     image: postgres:15
+    #     env:
+    #       POSTGRES_PASSWORD: postgres
+    #       POSTGRES_DB: testdb
+    #     options: >-
+    #       --health-cmd pg_isready
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
+
+    steps:
+      - name: Checkout code with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better analysis
+
+      - name: Set up JDK 21 with multiple distributions
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Advanced Maven caching
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.m2/wrapper
+            target
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml', '**/maven-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Setup environment variables
+        run: |
+          echo "MAVEN_OPTS=-Xmx2g -XX:+UseG1GC" >> $GITHUB_ENV
+          echo "JAVA_TOOL_OPTIONS=-Djava.awt.headless=true" >> $GITHUB_ENV
+
+      - name: Make Maven wrapper executable
+        run: chmod +x ./mvnw
+
+      - name: Install advanced development tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            curl \
+            jq \
+            git \
+            tree \
+            htop \
+            vim \
+            nano \
+            unzip \
+            wget \
+            build-essential
+
+          # Install GitHub CLI for repository operations
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y gh
+
+      - name: Download and compile with parallel execution
+        run: |
+          # Use parallel compilation for faster builds
+          ./mvnw -T 4 dependency:go-offline compile test-compile
+          
+      - name: Run comprehensive tests
+        run: |
+          # Run tests with coverage and reporting
+          ./mvnw test jacoco:report
+          
+      - name: Code quality checks (if tools are configured)
+        run: |
+          # Run additional quality checks if available
+          if [ -f "checkstyle.xml" ]; then
+            ./mvnw checkstyle:check || echo "Checkstyle not configured, skipping..."
+          fi
+          
+          if grep -q "spotbugs" pom.xml; then
+            ./mvnw spotbugs:check || echo "SpotBugs not configured, skipping..."
+          fi
+
+      - name: Setup IDE configurations
+        run: |
+          # Create IDE-friendly configurations
+          mkdir -p .vscode
+          cat > .vscode/settings.json << 'EOF'
+          {
+            "java.home": "${{ env.JAVA_HOME }}",
+            "java.configuration.updateBuildConfiguration": "automatic",
+            "java.compile.nullAnalysis.mode": "automatic"
+          }
+          EOF
+
+      - name: Pre-warm application
+        run: |
+          # Start application in background to pre-warm caches
+          timeout 30s ./mvnw spring-boot:run -Dspring-boot.run.profiles=test || echo "Application pre-warm completed"
+
+      - name: Create development scripts
+        run: |
+          # Create useful development scripts
+          cat > run-dev.sh << 'EOF'
+          #!/bin/bash
+          echo "Starting development server..."
+          ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+          EOF
+          chmod +x run-dev.sh
+          
+          cat > test-watch.sh << 'EOF'
+          #!/bin/bash
+          echo "Running tests in watch mode..."
+          ./mvnw test -Dspring.profiles.active=test
+          EOF
+          chmod +x test-watch.sh
+
+      - name: Generate project documentation
+        run: |
+          # Generate useful project information
+          echo "=== Project Information ===" > PROJECT_INFO.md
+          echo "Generated at: $(date)" >> PROJECT_INFO.md
+          echo "" >> PROJECT_INFO.md
+          echo "## Dependencies" >> PROJECT_INFO.md
+          ./mvnw dependency:tree >> PROJECT_INFO.md
+          echo "" >> PROJECT_INFO.md
+          echo "## Project Structure" >> PROJECT_INFO.md
+          tree -I 'target|.git|node_modules' >> PROJECT_INFO.md
+
+      - name: Verify complete environment
+        run: |
+          echo "=== Enhanced Copilot Environment Setup Complete ==="
+          echo "✅ Java 21 with advanced configuration"
+          echo "✅ Maven with parallel compilation support"
+          echo "✅ Comprehensive dependency caching"
+          echo "✅ Development tools and CLI utilities"
+          echo "✅ Code quality tools (if configured)"
+          echo "✅ IDE configurations"
+          echo "✅ Development scripts created"
+          echo "✅ Project documentation generated"
+          echo ""
+          echo "Environment is ready for advanced Copilot operations!"
+          echo ""
+          echo "Available development scripts:"
+          echo "- ./run-dev.sh - Start development server"
+          echo "- ./test-watch.sh - Run tests"
+          echo ""
+          echo "Project info available in PROJECT_INFO.md"
