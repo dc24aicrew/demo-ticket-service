@@ -1,5 +1,10 @@
 package com.ticketmanagement.demo.infrastructure.config;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.UUID;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +19,6 @@ import com.ticketmanagement.demo.core.port.api.UserServicePort;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
-import java.util.UUID;
-
 /**
  * Configuration for initializing demo data
  */
@@ -28,15 +28,27 @@ public class DataInitializer {
 
     /**
      * Creates demo data on application startup
-     */
-    @Bean
+     */    @Bean
     public CommandLineRunner initData(
             UserServicePort userService,
             EventServicePort eventService,
             TicketServicePort ticketService) {
         return args -> {
-            createDemoUsers(userService);
-            createDemoEvents(eventService, ticketService);
+            // Check if data already exists before trying to create it
+            if (userService.getUserByUsername("admin").isEmpty() || userService.getUserByUsername("user").isEmpty()) {
+                createDemoUsers(userService);
+            } else {
+                log.info("Users already exist, skipping user creation");
+            }
+            
+            if (eventService.getAllEvents().isEmpty()) {
+                createDemoEvents(eventService, ticketService);
+            } else {
+                log.info("Events already exist, skipping event creation");
+            }
+            
+            // Signal that initialization is complete
+            log.info("Data initialization completed successfully");
         };
     }
     
