@@ -1,9 +1,6 @@
 package com.ticketmanagement.demo.infrastructure.security;
 
-import java.util.Base64;
-
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,8 +28,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // Secret should be externalized in a real application using environment variables or a secure vault
-    private static final String JWT_SECRET = "r9fQdKQcLNDxZQmGywjQFvtBJQa4wYpWkxixLkEJMXRt5zydkF";
     private final JwtTokenProvider jwtTokenProvider;
 
     public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
@@ -46,8 +41,8 @@ public class SecurityConfig {
     
     @Bean
     public JwtDecoder jwtDecoder() {
-        SecretKey secretKey = new SecretKeySpec(Base64.getEncoder().encode(JWT_SECRET.getBytes()), "HmacSHA256");
-        return NimbusJwtDecoder.withSecretKey(secretKey).build();
+        // Use the same key from JwtTokenProvider
+        return NimbusJwtDecoder.withSecretKey(jwtTokenProvider.getKey()).build();
     }
     
     @Bean
