@@ -3,6 +3,7 @@ package com.ticketmanagement.demo.api.rest.controller;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Date;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ticketmanagement.demo.api.rest.dto.AuthRequest;
 import com.ticketmanagement.demo.api.rest.dto.AuthResponse;
+import com.ticketmanagement.demo.api.rest.dto.TokenVerificationResponse;
 import com.ticketmanagement.demo.infrastructure.persistence.entity.UserJpaEntity;
 import com.ticketmanagement.demo.infrastructure.persistence.repository.UserJpaRepository;
 import com.ticketmanagement.demo.infrastructure.security.JwtTokenProvider;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -87,5 +92,61 @@ public class AuthController {
         Map<String, String> response = new HashMap<>();
         response.put("message", "Logged out successfully");
         return ResponseEntity.ok(response);
+    }
+    
+    /**
+     * Verify JWT token endpoint
+     * Validates a JWT token from the Authorization header and returns its claims if valid
+     *
+     * @param request the HTTP request containing the Authorization header
+     * @return token claims if valid, or 401 Unauthorized if invalid
+     */
+    @PostMapping("/verify")
+    public ResponseEntity<?> verifyToken(HttpServletRequest request) {
+        // Extract token from Authorization header
+        String header = request.getHeader(jwtTokenProvider.getAuthHeader());
+        String token = jwtTokenProvider.resolveToken(header);
+        
+        // Check if token exists
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Missing or invalid token"));
+        }
+        
+        // Validate token
+        try {
+            if (!jwtTokenProvider.validateToken(token)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid token"));
+            }
+            
+            // Get token claims using authentication object
+            Claims claims = getClaimsFromToken(token);
+            
+            // Create response with token claims
+            TokenVerificationResponse response = new TokenVerificationResponse(
+                    claims.getSubject(),
+                    claims.get("auth", String.class),
+                    claims.getIssuedAt(),
+                    claims.getExpiration()
+            );
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Token validation failed"));
+        }
+    }
+    
+    /**
+     * Helper method to get claims from token using reflection
+     * This is needed because getClaims is private in JwtTokenProvider
+     *
+     * @param token the JWT token
+     * @return the token claims
+     */
+    private Claims getClaimsFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(jwtTokenProvider.getKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
