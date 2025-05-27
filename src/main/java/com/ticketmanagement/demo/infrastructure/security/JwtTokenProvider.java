@@ -194,4 +194,13 @@ public class JwtTokenProvider {
     public String getTokenPrefix() {
         return tokenPrefix;
     }
+    
+    /**
+     * Gets the signing key
+     * 
+     * @return The secret key used for JWT signing
+     */
+    public SecretKey getKey() {
+        return key;
+    }
 }

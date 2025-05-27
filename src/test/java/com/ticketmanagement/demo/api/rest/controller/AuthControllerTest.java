@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -17,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticketmanagement.demo.api.rest.dto.AuthRequest;
 import com.ticketmanagement.demo.core.domain.entity.User;
 import com.ticketmanagement.demo.core.port.api.UserServicePort;
+import com.ticketmanagement.demo.infrastructure.security.JwtTokenProvider;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -30,6 +33,12 @@ public class AuthControllerTest {
     
     @Autowired
     private UserServicePort userService;
+    
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    
+    @Autowired
+    private UserDetailsService userDetailsService;
     
     @Test
     void loginWithValidCredentials() throws Exception {
