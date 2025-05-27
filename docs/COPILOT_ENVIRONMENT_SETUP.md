@@ -19,7 +19,7 @@ Your project now has a customized Copilot environment configured in `.github/wor
 
 #### Enhanced Environment (Optional)
 
-An enhanced example is available in `copilot-setup-steps-enhanced.yml.example` with:
+An enhanced example is available in `.github/workflows/copilot-setup-steps-enhanced.yml.example` with:
 
 - **Larger runner support** (requires GitHub Team/Enterprise)
 - **Advanced caching strategies**
